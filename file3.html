@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英検3級 英単語クイズ - ファイル3 (1001-1500)</title>
+    <style>
+        :root {
+            --primary-orange: #ff9800;
+            --dark-orange: #e65100;
+            --light-orange: #fff3e0;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-orange);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--dark-orange);
+            text-align: center;
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .cat-decoration {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .setup-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark-orange);
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--primary-orange);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-orange);
+        }
+
+        .home-btn {
+            background-color: #757575;
+            margin-top: 15px;
+        }
+        .home-btn:hover {
+            background-color: #424242;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .word-display {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--dark-orange);
+        }
+
+        .choices-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .choice-btn {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .choice-btn:hover {
+            background-color: var(--dark-orange);
+            transform: translateY(-2px);
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--dark-orange);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="cat-decoration">🐾 😺 🐾</div>
+    
+    <div id="setup-screen">
+        <h1>英検3級 単語クイズ (1001-1500)</h1>
+        
+        <div class="setup-group">
+            <label for="level-select">難易度レベルを選択</label>
+            <select id="level-select">
+                <option value="all">すべて（初級・中級・上級）</option>
+                <option value="初級">初級レベル</option>
+                <option value="中級">中級レベル</option>
+                <option value="上級">上級レベル</option>
+            </select>
+        </div>
+
+        <div class="setup-group">
+            <label for="question-count">出題問数</label>
+            <input type="number" id="question-count" value="10" min="1" max="50">
+        </div>
+
+        <button class="btn" onclick="startQuiz()">クイズスタート！</button>
+        <button class="btn home-btn" onclick="goHome()">ホームに戻る</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="quiz-header">
+            <span id="current-level-badge">レベル: -</span>
+            <span id="progress-text">1 / 10</span>
+        </div>
+        
+        <div class="word-display" id="question-word">犬</div>
+        
+        <div class="choices-container">
+            <button class="choice-btn" onclick="submitAnswer(0)">選択肢 1</button>
+            <button class="choice-btn" onclick="submitAnswer(1)">選択肢 2</button>
+            <button class="choice-btn" onclick="submitAnswer(2)">選択肢 3</button>
+            <button class="choice-btn" onclick="submitAnswer(3)">選択肢 4</button>
+        </div>
+
+        <button class="btn home-btn" onclick="goHome()">ホームに戻る</button>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h1>クイズ結果 🐾</h1>
+        <div class="result-score" id="score-display">0 / 0</div>
+        <p style="text-align: center; font-weight: bold;" id="result-comment"></p>
+        <button class="btn" onclick="restartSetup()">もう一度解く</button>
+        <button class="btn home-btn" onclick="goHome()">ホームに戻る</button>
+    </div>
+</div>
+
+<script>
+    const wordDatabase = [
+        { word: "dog", meaning: "犬", dummy: ["cat", "rabbit", "hamster"], level: "初級" },
+        { word: "library", meaning: "図書館", dummy: ["gym", "movie theater", "museum"], level: "初級" },
+        { word: "interesting", meaning: "おもしろい", dummy: ["boring", "sad", "angry"], level: "中級" },
+        { word: "population", meaning: "人口", dummy: ["popularity", "pollution", "rate"], level: "上級" }
+    ];
+
+    let quizQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentCorrectIndex = 0;
+
+    function startQuiz() {
+        const selectedLevel = document.getElementById("level-select").value;
+        const requestedCount = parseInt(document.getElementById("question-count").value) || 10;
+
+        let filteredWords = wordDatabase;
+        if (selectedLevel !== "all") {
+            filteredWords = wordDatabase.filter(w => w.level === selectedLevel);
+        }
+
+        if (filteredWords.length === 0) {
+            alert("該当するレベルの単語がデータベースにありません。");
+            return;
+        }
+
+        const shuffled = [...filteredWords].sort(() => 0.5 - Math.random());
+        quizQuestions = shuffled.slice(0, Math.min(requestedCount, shuffled.length));
+
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById("setup-screen").classList.add("hidden");
+        document.getElementById("quiz-screen").classList.remove("hidden");
+        
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const currentData = quizQuestions[currentQuestionIndex];
+        
+        document.getElementById("current-level-badge").innerText = `レベル: ${currentData.level}`;
+        document.getElementById("progress-text").innerText = `${currentQuestionIndex + 1} / ${quizQuestions.length}`;
+        
+        document.getElementById("question-word").innerText = currentData.meaning;
+
+        let choices = [currentData.word, ...currentData.dummy];
+        choices = choices.sort(() => 0.5 - Math.random());
+        
+        currentCorrectIndex = choices.indexOf(currentData.word);
+
+        const buttons = document.querySelectorAll(".choices-container .choice-btn");
+        buttons.forEach((btn, index) => {
+            btn.innerText = `${index + 1}. ${choices[index]}`;
+        });
+    }
+
+    function submitAnswer(selectedIndex) {
+        if (selectedIndex === currentCorrectIndex) {
+            score++;
+            alert("正解！ 🐾");
+        } else {
+            const currentData = quizQuestions[currentQuestionIndex];
+            alert(`残念！ 正解は 「${currentData.word}」 でした。`);
+        }
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizQuestions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("quiz-screen").classList.add("hidden");
+        document.getElementById("result-screen").classList.remove("hidden");
+        
+        document.getElementById("score-display").innerText = `${score} / ${quizQuestions.length}`;
+        
+        let comment = "よく頑張りました！";
+        if (score === quizQuestions.length) comment = "パーフェクト！素晴らしいです！😻";
+        document.getElementById("result-comment").innerText = comment;
+    }
+
+    function restartSetup() {
+        document.getElementById("result-screen").classList.add("hidden");
+        document.getElementById("setup-screen").classList.remove("hidden");
+    }
+
+    function goHome() {
+        window.location.href = "index.html"; 
+    }
+</script>
+
+</body>
+</html>
+
+
